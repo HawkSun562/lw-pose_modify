@@ -12,7 +12,7 @@ reference: https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.py
 
 1. Download COCO 2017 dataset: [http://cocodataset.org/#download](http://cocodataset.org/#download) (train, val, annotations) and unpack it to `<COCO_HOME>` folder.
 2. Install requirements `pip install -r requirements.txt`
-
+3. Pretrain model [GoogleDrive](https://drive.google.com/drive/folders/1SKKtiK1EeoID0j5H_6xZ-NjC2aEMP4Cr?usp=sharing)
    #### NOTE
    * 若使用pip 安裝pycocotools有報錯，可以改用conda安裝 `conda install -c conda-forge pycocotools`
    * 建議使用opencv-python-headless取代opencv-python `pip install opencv-python-headless`，避免造成import cv2時出錯
