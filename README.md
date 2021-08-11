@@ -14,7 +14,7 @@ reference: https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.py
 2. Install requirements `pip install -r requirements.txt`
 
    #### NOTE
-   * Pytorch與cuda版本的搭配及對應的安裝指令可以參考[pytorch網站](https://pytorch.org/get-started/previous-versions/)，若使用requirements安裝有問題也可以嘗試用pytorch網站的安裝指令
+   * Pytorch與cuda版本的搭配及對應的安裝指令可以參考[pytorch網站](https://pytorch.org/get-started/previous-versions/)，直接安裝有問題也可以嘗試用pytorch網站的安裝指令
    * 若使用pip 安裝pycocotools有報錯，可以改用conda安裝 `conda install -c conda-forge pycocotools`
    * 建議使用opencv-python-headless取代opencv-python `pip install opencv-python-headless`，避免造成import cv2時出錯
 
@@ -35,7 +35,7 @@ reference: https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.py
 
    ##### NOTE
    1. 若有多張顯卡可以設定`--gpu n`，代表使用第n張顯卡訓練
-   2. 若執行後有"CUDA out of memory."或類似gpu ram不足的錯誤的話可以透過`--batch-size n`將batch size調小，預設為80，反之若記憶體占用不高，可以調大加快訊練
+   2. 若執行後有"CUDA out of memory."或類似gpu ram不足的錯誤的話可以透過`--batch-size n`將batch size調小，預設為80，反之若記憶體占用不高，可以調大加快訓練
    3. 預設為5000個epoch儲存checkpoint，若覺得太久可以透過`--checkpoint-after n`調整
    4. 不同stage的模型checkpint不能共用，沒有checkpoint的話只能從mobilenet參數訓練，參考"Train from MobileNet weights"
    5. 若要調整stage數目`--num-refinement-stages n`預設n為1，代表基本一定要有的第一層加refinement-stages 1層，總共兩層，這次增加到4層stage也就是這邊參數設3
