@@ -9,12 +9,13 @@ reference: https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.py
 * PyTorch 1.8.1
 
 ### Prerequisites
+
 1. Download COCO 2017 dataset: [http://cocodataset.org/#download](http://cocodataset.org/#download) (train, val, annotations) and unpack it to `<COCO_HOME>` folder.
 2. Install requirements `pip install -r requirements.txt`
-NOTE: 
-1.若使用pip 安裝pycocotools有報錯，可以改用conda安裝 `conda install -c conda-forge pycocotools`
-2.建議使用opencv-python-headless取代opencv-python `pip install opencv-python-headless`，避免造成import cv2時出錯
 
+   #### NOTE
+   * 若使用pip 安裝pycocotools有報錯，可以改用conda安裝 `conda install -c conda-forge pycocotools`
+   * 建議使用opencv-python-headless取代opencv-python `pip install opencv-python-headless`，避免造成import cv2時出錯
 
 ### Training Steps
 
@@ -31,16 +32,16 @@ NOTE:
 #### Train from checkpoint from previous step
 `python train.py --train-images-folder <COCO_HOME>/train2017/ --prepared-train-labels prepared_train_annotation.pkl --val-labels val_subset.json --val-images-folder <COCO_HOME>/val2017/ --checkpoint-path <path_to>/checkpoint_iter_420000.pth --weights-only`
 
-NOTE:
-1.若有多張顯卡可以設定`--gpu n`，代表使用第n張顯卡訓練
-2.若執行後有"CUDA out of memory."或類似gpu ram不足的錯誤的話可以透過`--batch-size n`將batch size調小，預設為80，反之若記憶體占用不高，可以調大加快訊練
-3.預設為5000個epoch儲存checkpoint，若覺得太久可以透過`--checkpoint-after n`調整
-4.不同stage的模型checkpint不能共用，沒有checkpoint的話只能從mobilenet參數訓練，參考"Train from MobileNet weights"
-5.若要調整stage數目`--num-refinement-stages n`預設n為1，代表基本一定要有的第一層加refinement-stages 1層，總共兩層，這次增加到4層stage也就是這邊參數設3
+   ##### NOTE
+   1. 若有多張顯卡可以設定`--gpu n`，代表使用第n張顯卡訓練
+   2. 若執行後有"CUDA out of memory."或類似gpu ram不足的錯誤的話可以透過`--batch-size n`將batch size調小，預設為80，反之若記憶體占用不高，可以調大加快訊練
+   3. 預設為5000個epoch儲存checkpoint，若覺得太久可以透過`--checkpoint-after n`調整
+   4. 不同stage的模型checkpint不能共用，沒有checkpoint的話只能從mobilenet參數訓練，參考"Train from MobileNet weights"
+   5. 若要調整stage數目`--num-refinement-stages n`預設n為1，代表基本一定要有的第一層加refinement-stages 1層，總共兩層，這次增加到4層stage也就是這邊參數設3
 
 ## Validation
 
-Run `python val.py --labels <COCO_HOME>/annotations/person_keypoints_val2017.json --images-folder <COCO_HOME>/val2017 --checkpoint-path <CHECKPOINT>`
+* `python val.py --labels <COCO_HOME>/annotations/person_keypoints_val2017.json --images-folder <COCO_HOME>/val2017 --checkpoint-path <CHECKPOINT>`
 
 ## Python Demo
 
