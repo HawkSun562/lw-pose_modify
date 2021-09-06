@@ -2,7 +2,7 @@
 
 reference: https://github.com/Daniil-Osokin/lightweight-human-pose-estimation.pytorch  
   
-Modify some content to fit needed.
+Modify some content to fit kneron edge computing device.
 
 ## Training
 
