@@ -1,5 +1,2 @@
-torch>=1.6.0
-torchvision>=0.7.0
 pycocotools>=2.0.2
 opencv-python-headless>=3.4.0.14
-numpy>=1.14.0
