@@ -23,6 +23,11 @@ cv2.ocl.setUseOpenCL(False)  # To prevent freeze of DataLoader
 def train(prepared_train_labels, train_images_folder, num_refinement_stages, base_lr, batch_size, batches_per_iter,
           num_workers, checkpoint_path, weights_only, from_mobilenet, checkpoints_folder, log_after,
           val_labels, val_images_folder, val_output_name, checkpoint_after, val_after):
+    gpu_available = torch.cuda.is_available()
+    if gpu_available: 
+        print('[INFO] Training on GPU')
+    else:
+        print('[INFO] Training on CPU')
     net = PoseEstimationWithMobileNet(num_refinement_stages)
 
     stride = 8
@@ -59,8 +64,8 @@ def train(prepared_train_labels, train_images_folder, num_refinement_stages, bas
     drop_after_epoch = [100, 200, 260]
     scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=drop_after_epoch, gamma=0.333)
     if checkpoint_path:
-        checkpoint = torch.load(checkpoint_path)
-
+        checkpoint = torch.load(checkpoint_path, map_location=lambda storage, loc: storage.cuda()) if gpu_available else torch.load(checkpoint_path, map_location=lambda storage, loc: storage)
+        
         if from_mobilenet:
             load_from_mobilenet(net, checkpoint)
         else:
@@ -71,7 +76,7 @@ def train(prepared_train_labels, train_images_folder, num_refinement_stages, bas
                 num_iter = checkpoint['iter']
                 current_epoch = checkpoint['current_epoch']
 
-    net = DataParallel(net).cuda()
+    net = DataParallel(net).cuda() if gpu_available else DataParallel(net).cpu()
     net.train()
     for epochId in range(current_epoch, 280):
         total_losses = [0, 0] * (num_refinement_stages + 1)  # heatmaps loss, paf loss per stage
@@ -80,11 +85,11 @@ def train(prepared_train_labels, train_images_folder, num_refinement_stages, bas
             if batch_per_iter_idx == 0:
                 optimizer.zero_grad()
 
-            images = batch_data['image'].cuda()
-            keypoint_masks = batch_data['keypoint_mask'].cuda()
-            paf_masks = batch_data['paf_mask'].cuda()
-            keypoint_maps = batch_data['keypoint_maps'].cuda()
-            paf_maps = batch_data['paf_maps'].cuda()
+            images = batch_data['image'].cuda() if gpu_available else batch_data['image']
+            keypoint_masks = batch_data['keypoint_mask'].cuda() if gpu_available else batch_data['keypoint_mask']
+            paf_masks = batch_data['paf_mask'].cuda() if gpu_available else batch_data['paf_mask']
+            keypoint_maps = batch_data['keypoint_maps'].cuda() if gpu_available else batch_data['keypoint_maps']
+            paf_maps = batch_data['paf_maps'].cuda() if gpu_available else batch_data['paf_maps']
 
             stages_output = net(images)
 
