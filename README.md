@@ -13,7 +13,7 @@ Modify some content to fit needed.
 ### Prerequisites
 
 1. Download COCO 2017 dataset: [http://cocodataset.org/#download](http://cocodataset.org/#download) (train, val, annotations) and unpack it to `<COCO_HOME>` folder.
-2. Install PyTorch by the command from [pytorch.org](https://pytorch.org/get-started/previous-versions/)
+2. Install PyTorch by the command from [pytorch website](https://pytorch.org/get-started/previous-versions/)
 3. Install requirements `pip install -r requirements.txt`
 
    #### NOTE
