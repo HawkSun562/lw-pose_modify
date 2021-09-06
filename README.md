@@ -17,7 +17,7 @@ Modify some content to fit needed.
 
    #### NOTE
    * Pytorch與cuda版本的搭配及對應的安裝指令可以參考[pytorch網站](https://pytorch.org/get-started/previous-versions/)，直接安裝有問題也可以嘗試用pytorch網站的安裝指令
-   * 若使用pip 安裝pycocotools有報錯，可以改用conda安裝 `conda install -c conda-forge pycocotools`
+   * 若在linux環境使用pip 安裝pycocotools有報錯，可以改用conda安裝 `conda install -c conda-forge pycocotools`
    * 建議使用opencv-python-headless取代opencv-python `pip install opencv-python-headless`，避免造成import cv2時出錯
 
 ### Training Steps
