@@ -78,7 +78,7 @@ def infer_fast(net, img, net_input_height_size, stride, upsample_ratio, cpu,
     return heatmaps, pafs, scale, pad
 
 
-def run_demo(net, image_provider, height_size, cpu, track, smooth, output_name, fps, show):
+def run_demo(net, image_provider, height_size, cpu, track, smooth, output_name, show):
     net = net.eval()
     if not cpu:
         net = net.cuda()
@@ -91,9 +91,13 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth, output_name, 
     out = None
 
     if output_name != '':
+        in_video = cv2.VideoCapture(image_provider.file_name)
+        in_w = int(in_video.get(cv2.CAP_PROP_FRAME_WIDTH))
+        in_h = int(in_video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        in_fps = in_video.get(cv2.CAP_PROP_FPS)
         # Define the codec and create VideoWriter object
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
-        out = cv2.VideoWriter(output_name + '.avi', fourcc, fps, (320,  240))
+        out = cv2.VideoWriter(output_name + '.avi', fourcc, in_fps, (in_w,  in_h))
 
     for img in image_provider:
         orig_img = img.copy()
@@ -163,7 +167,6 @@ if __name__ == '__main__':
     parser.add_argument('--track', type=int, default=1, help='track pose id in video')
     parser.add_argument('--smooth', type=int, default=1, help='smooth pose keypoints')
     parser.add_argument('--output-name', type=str, default='', help='output video name. if set will provide a output video')
-    parser.add_argument('--fps', type=int, default=30, help='set fps for output video')
     parser.add_argument('--show', type=int, default=1, help='set to "0" will NOT showing result in screen.')
     args = parser.parse_args()
 
@@ -180,4 +183,4 @@ if __name__ == '__main__':
     else:
         args.track = 0
 
-    run_demo(net, frame_provider, args.height_size, args.cpu, args.track, args.smooth, args.output_name, args.fps, args.show)
+    run_demo(net, frame_provider, args.height_size, args.cpu, args.track, args.smooth, args.output_name, args.show)
