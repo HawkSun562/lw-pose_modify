@@ -78,7 +78,7 @@ def infer_fast(net, img, net_input_height_size, stride, upsample_ratio, cpu,
     return heatmaps, pafs, scale, pad
 
 
-def run_demo(net, image_provider, height_size, cpu, track, smooth):
+def run_demo(net, image_provider, height_size, cpu, track, smooth, output_name, fps, show):
     net = net.eval()
     if not cpu:
         net = net.cuda()
@@ -88,6 +88,13 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
     num_keypoints = Pose.num_kpts
     previous_poses = []
     delay = 1
+    out = None
+
+    if output_name != '':
+        # Define the codec and create VideoWriter object
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out = cv2.VideoWriter(output_name + '.avi', fourcc, fps, (320,  240))
+
     for img in image_provider:
         orig_img = img.copy()
         heatmaps, pafs, scale, pad = infer_fast(net, img, height_size, stride, upsample_ratio, cpu)
@@ -125,16 +132,22 @@ def run_demo(net, image_provider, height_size, cpu, track, smooth):
             if track:
                 cv2.putText(img, 'id: {}'.format(pose.id), (pose.bbox[0], pose.bbox[1] - 16),
                             cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255))
-        cv2.imshow('Lightweight Human Pose Estimation Python Demo', img)
-        key = cv2.waitKey(delay)
-        if key == 27:  # esc
-            return
-        elif key == 112:  # 'p'
-            if delay == 1:
-                delay = 0
-            else:
-                delay = 1
 
+        if out != None:
+            out.write(img)
+        
+        if show:
+            cv2.imshow('Lightweight Human Pose Estimation Python Demo', img)
+            key = cv2.waitKey(delay)
+            if key == 27:  # esc
+                return
+            elif key == 112:  # 'p'
+                if delay == 1:
+                    delay = 0
+                else:
+                    delay = 1
+    if out != None:
+        out.release()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -142,18 +155,22 @@ if __name__ == '__main__':
                        This is just for quick results preview.
                        Please, consider c++ demo for the best performance.''')
     parser.add_argument('--checkpoint-path', type=str, required=True, help='path to the checkpoint')
+    parser.add_argument('--num-refinement-stages', type=int, default=1, help='number of refinement stages')
     parser.add_argument('--height-size', type=int, default=256, help='network input layer height size')
     parser.add_argument('--video', type=str, default='', help='path to video file or camera id')
     parser.add_argument('--images', nargs='+', default='', help='path to input image(s)')
     parser.add_argument('--cpu', action='store_true', help='run network inference on cpu')
     parser.add_argument('--track', type=int, default=1, help='track pose id in video')
     parser.add_argument('--smooth', type=int, default=1, help='smooth pose keypoints')
+    parser.add_argument('--output-name', type=str, default='', help='output video name. if set will provide a output video')
+    parser.add_argument('--fps', type=int, default=30, help='set fps for output video')
+    parser.add_argument('--show', type=int, default=1, help='set to "0" will NOT showing result in screen.')
     args = parser.parse_args()
 
     if args.video == '' and args.images == '':
         raise ValueError('Either --video or --image has to be provided')
 
-    net = PoseEstimationWithMobileNet()
+    net = PoseEstimationWithMobileNet(args.num_refinement_stages)
     checkpoint = torch.load(args.checkpoint_path, map_location='cpu')
     load_state(net, checkpoint)
 
@@ -163,4 +180,4 @@ if __name__ == '__main__':
     else:
         args.track = 0
 
-    run_demo(net, frame_provider, args.height_size, args.cpu, args.track, args.smooth)
+    run_demo(net, frame_provider, args.height_size, args.cpu, args.track, args.smooth, args.output_name, args.fps, args.show)

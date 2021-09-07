@@ -50,6 +50,7 @@ Modify some content to fit kneron edge computing device.
 ## Python Demo
 
 * `python demo.py --checkpoint-path <path_to>/checkpoint_iter_370000.pth --video 0`
+* use `python demo.py -h` for more information.
 
 ## Convert to onnx
 
