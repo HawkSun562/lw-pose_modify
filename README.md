@@ -58,4 +58,4 @@ Modify some content to fit kneron edge computing device.
 
 ## Edit onnx
 
-* `python onnx_edit.py --outputs [677,680] input_onnx_file output_onnx_file`, cause lw_pose only need final two output. This step will keep the output name in `--outputs`，you need to open the onnx file by "Netron" and set the final two output name into `--outputs`
+* `python onnx_edit.py --outputs [ouput_name_1,ouput_name_2] input_onnx_file output_onnx_file`, cause lw_pose only need final two outputs. This step will keep the output name in `--outputs`，you need to open the onnx file by "Netron" and fill the final two output names into `--outputs`
