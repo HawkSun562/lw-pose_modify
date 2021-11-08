@@ -55,3 +55,7 @@ Modify some content to fit kneron edge computing device.
 ## Convert to onnx
 
 * `python save_checkpoint_to_onnx.py --num-refinement-stages 3 --size 120 160 --checkpoint-path <path_to_checkpoint> --output-name lw_pose_4stage.onnx`, --num-refinement-stages defalut 1, --output-name default 'lw_pose.onnx'
+
+## Edit onnx
+
+* `python onnx_edit.py --outputs [677,680] input_onnx_file output_onnx_file`, cause lw_pose only need final two output. This step will keep the output name in `--outputs`，you need to open the onnx file by "Netron" and set the final two output name into `--outputs`
